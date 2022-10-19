@@ -1,0 +1,163 @@
+<div class="row">
+    <section class="col-md-6">
+        <div class="header">
+            <h1>Field List</h1>
+            <button type="button" class="btn btn-outline-primary" (click)="addNewField()">
+                Add Field</button>
+        </div>
+        <table class="table">
+            <thead class="thead-light t-head">
+                <tr>
+                    <th scope="col">Job Id</th>
+                    <th scope="col">Sort Number</th>
+                    <th scope="col">Job Field Sinhala</th>
+                    <th scope="col">Job Field English</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let field of fields; let i = index" (click)="selectField(i, field)" [ngClass]="rowIndex == i ? 'active' : ''">
+                    <th>{{field.id}}</th>
+                    <td>{{field.sortNu}}</td>
+                    <td>{{field.jobSin}}</td>
+                    <td>{{field.jobEng}}</td>
+                    <td>
+                            <button 
+                            type="button" 
+                            [disabled]="rowIndex != i" 
+                            class="btn-xs icon"
+                            (click)="open(content)"
+                        >
+                            <i class="fa fa-plus"></i>
+                        </button>
+    
+                        <button 
+                            type="button" 
+                            [disabled]="rowIndex != i" 
+                            class="btn-xs icon"
+                            (click) = "openUpdtWndw(update)"
+                        >
+                        <i class="fa fa-pencil-square-o icon"></i></button>
+                        <button 
+                            type="button" 
+                            [disabled]="rowIndex != i" 
+                            class="btn-xs icon"
+                            (click) = "openDltWndw(delete,field.id)"
+                        >
+                        <i class="fa fa-trash"></i></button> 
+                    </td>
+                </tr>
+                
+            </tbody>
+        </table>
+    </section>
+
+    <app-forms class="col-md-6" *ngIf="show_add_form" (fieldAddEvent)="updateFieldList()" (closeAddEvent)="hideAddField()"></app-forms>
+    
+    <section>
+        <ng-template #content let-modal>
+            <div class="modal-header">
+              <h4 class="modal-title" id="modal-basic-title">New Title for {{selectedField.jobEng}}</h4>
+              <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="titleForm" (ngSubmit)="onSubmit()" class="row g-3">
+                    <div class="form-group">
+                        <label class="form-label">Job Sort Number</label>
+                        <input type="text" class="form-control" formControlName="sortNu">
+                        <div *ngIf="f['sortNu'].touched && f['sortNu'].invalid && f['sortNu'].errors && f['sortNu'].errors['required']"
+                        class="error">
+                        Filed Name is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Job Title Name Sinhala</label>
+                        <input type="text" class="form-control" formControlName="jobSin">
+                        <div *ngIf="f['jobSin'].touched && f['jobSin'].invalid && f['jobSin'].errors && f['jobSin'].errors['required']"
+                        class="error">
+                        Filed Name is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Job Title Name English</label>
+                        <input type="text" class="form-control" formControlName="jobEng">
+                        <div *ngIf="f['jobEng'].touched && f['jobEng'].invalid && f['jobEng'].errors && f['jobEng'].errors['required']"
+                        class="error">
+                        Field Name is required.</div>
+                    </div>
+                    
+                
+                    <div class="col-12 text-end mt-5">
+                        <p>status: {{titleForm.status}}</p>
+                        <button type="button" class="btn btn btn-outline-secondary me-2">cancel</button>
+                        <button type="submit" class="btn btn-outline-primary" [disabled]="!titleForm.valid">Submit<i
+                            *ngIf="isDataUploading" class="fa fa-spinner fa-pulse fa-fw"></i></button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">OK</button>
+            </div>
+          </ng-template>
+        
+    </section>
+    
+</div>
+
+<!--Update Job Field-->
+<ng-template #update let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-update">Update Job field {{selectedField.jobEng}}</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="fieldForm" (ngSubmit)="onUpdate()" class="row g-3">
+            <div class="form-group">
+                <label class="form-label">Field Sort Numnber</label>
+                <input type="text" class="form-control" formControlName="sortNu" [(ngModel)]="selectedField.sortNu">
+                <div *ngIf="ff['sortNu'].touched && ff['sortNu'].invalid && ff['sortNu'].errors && ff['sortNu'].errors['required']"
+                class="error">
+                Filed Name is required.</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Field Name Sinhala</label>
+                <input type="text" class="form-control" formControlName="jobSin" [(ngModel)]="selectedField.jobSin">
+                <div *ngIf="ff['jobSin'].touched && ff['jobSin'].invalid && ff['jobSin'].errors && ff['jobSin'].errors['required']"
+                class="error">
+                Filed Name is required.</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Field Name English</label>
+                <input type="text" class="form-control" formControlName="jobEng" [(ngModel)]="selectedField.jobEng">
+                <div *ngIf="ff['jobEng'].touched && ff['jobEng'].invalid && ff['jobEng'].errors && ff['jobEng'].errors['required']"
+                class="error">
+                Field Name is required.</div>
+            </div>
+            
+        
+            <div class="col-12 text-end mt-5">
+                <p>status: {{fieldForm.status}}</p>
+                <button type="button" class="btn btn btn-outline-secondary me-2">cancel</button>
+                <button type="submit" class="btn btn-outline-primary" [disabled]="!fieldForm.valid">Submit<i
+                    *ngIf="isDataUploading" class="fa fa-spinner fa-pulse fa-fw"></i></button>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">OK</button>
+    </div>
+    <p>{{update_message}}</p>
+  </ng-template>
+
+  <!--Delete Job Field confirm-->
+<ng-template #delete let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-delete">Delete Job field {{selectedField.jobEng}}</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <p>This will permanently remove the data from database. Continue?</p>
+    </div>
+    <div class="modal-footer">
+
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">OK</button>
+    </div>
+  </ng-template>

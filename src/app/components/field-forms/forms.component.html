@@ -1,0 +1,38 @@
+
+<div class="add-product-section mt-3">
+    <div class="box-head">
+        <h1 class="pr-name">Add a new Job field</h1>
+        <button type="button" class="btn btn-light" (click)="cancel()">X</button>
+    </div> 
+    <form [formGroup]="fieldForm" (ngSubmit)="onSubmit()" class="row g-3">
+        <div class="form-group">
+            <label class="form-label">Sort Number</label>
+            <input type="number" class="form-control" formControlName="sortNu">
+            <div *ngIf="f['sortNu'].touched && f['sortNu'].invalid && f['sortNu'].errors && f['sortNu'].errors['required']"
+            class="error">
+            sort number is required.</div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Field Name Sinhala</label>
+            <input type="text" class="form-control" formControlName="jobSin">
+            <div *ngIf="f['jobSin'].touched && f['jobSin'].invalid && f['jobSin'].errors && f['jobSin'].errors['required']"
+            class="error">
+            Filed Name is required.</div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Field Name English</label>
+            <input type="text" class="form-control" formControlName="jobEng">
+            <div *ngIf="f['jobEng'].touched && f['jobEng'].invalid && f['jobEng'].errors && f['jobEng'].errors['required']"
+            class="error">
+            Field Name is required.</div>
+        </div>
+        
+    
+        <div class="col-12 text-end mt-5">
+            <p>status: {{fieldForm.status}}</p>
+            <button type="button" class="btn btn btn-outline-secondary me-2">cancel</button>
+            <button type="submit" class="btn btn-outline-primary" [disabled]="!fieldForm.valid">Submit<i
+                *ngIf="isDataUploading" class="fa fa-spinner fa-pulse fa-fw"></i></button>
+        </div>
+    </form>
+    </div> 

@@ -1,0 +1,152 @@
+<section class="col-md-12">
+    <div class="header">
+        <h1>Title List</h1>
+    </div>
+    
+<table class="table">
+    <thead class="thead-light t-head">
+        <tr>
+            <th scope="col">Job Id</th>
+            <th scope="col">Field Id</th>
+            <th scope="col">Sort Number</th>
+            <th scope="col">Job Title Sinhala</th>
+            <th scope="col">Job Title English</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let title of titles; let i = index" (click)="selectedTitle(i, title)" [ngClass]="rowIndex == i ? 'active' : ''">
+            <th>{{title.id}}</th>
+            <th>{{title.fieldId}}</th>
+            <td>{{title.sortNu}}</td>
+            <td>{{title.jobSin}}</td>
+            <td>{{title.jobEng}}</td>
+            <td>
+                <button *ngIf="title_rowIndex == i" class="btn-xs icon" (click)="open(content)"><i class="fa fa-plus"></i></button>
+                
+                <button 
+                    type="button" 
+                    [disabled]="title_rowIndex != i" 
+                    class="btn-xs icon"
+                    (click) = "openUpdtWndw(update)"
+                >
+                <i class="fa fa-pencil-square-o icon"></i></button>
+                <button 
+                    type="button" 
+                    [disabled]="title_rowIndex != i" 
+                    class="btn-xs icon"
+                    (click) = "openDltWindow(delete, title.id)"
+                >
+                <i class="fa fa-trash"></i></button> 
+            </td>
+        </tr>
+        
+    </tbody>
+</table>
+
+</section>
+
+<!--new description screen-->
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">New Description for {{selected_title.jobEng}}</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="descriptionForm" (ngSubmit)="onSubmit()" class="row g-3">
+            <div class="form-group">
+                <label class="form-label">Job sort Number</label>
+                <input type="text" class="form-control" formControlName="sortNu">
+                <div *ngIf="f['sortNu'].touched && f['sortNu'].invalid && f['sortNu'].errors && f['sortNu'].errors['required']"
+                class="error">
+                Job sort number is required.</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Job Name English</label>
+                <input type="text" class="form-control" formControlName="name">
+                <div *ngIf="f['name'].touched && f['name'].invalid && f['name'].errors && f['name'].errors['required']"
+                class="error">
+                Filed Name is required.</div>
+            </div>
+            <div clss="form-group">
+                <label class="form-label">Job Description</label>
+                <!--<input type="text" class="form-control" formControlName="description">-->
+                <textarea class="form-control" formControlName="description"></textarea>
+                <div *ngIf="f['description'].touched && f['description'].invalid && f['description'].errors && f['description'].errors['required']"
+                class="error">
+                Description is required.</div>
+            </div>
+            
+        
+            <div class="col-12 text-end mt-5">
+                <p>status: {{descriptionForm.status}}</p>
+                <button type="button" class="btn btn btn-outline-secondary me-2">cancel</button>
+                <button type="submit" class="btn btn-outline-primary" [disabled]="!descriptionForm.valid">Submit<i
+                    *ngIf="isDataUploading" class="fa fa-spinner fa-pulse fa-fw"></i></button>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">OK</button>
+    </div>
+  </ng-template>
+  
+  <!--Update Window-->
+  <ng-template #update let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">New Title for {{selected_title.jobEng}}</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="titleForm" (ngSubmit)="onUpdate()" class="row g-3">
+            <div class="form-group">
+                <label class="form-label">Job sort Number</label>
+                <input type="number" class="form-control" formControlName="sortNu" [(ngModel)]="selected_title.sortNu">
+                <div *ngIf="ff['sortNu'].touched && ff['sortNu'].invalid && ff['sortNu'].errors && ff['sortNu'].errors['required']"
+                class="error">
+                Job sort number is required.</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Update Title Name Sinhala</label>
+                <input type="text" class="form-control" formControlName="jobSin" [(ngModel)]="selected_title.jobSin">
+                <div *ngIf="ff['jobSin'].touched && ff['jobSin'].invalid && ff['jobSin'].errors && ff['jobSin'].errors['required']"
+                class="error">
+                Filed Name is required.</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Update Job Title Name English</label>
+                <input type="text" class="form-control" formControlName="jobEng" [(ngModel)]="selected_title.jobEng">
+                <div *ngIf="ff['jobEng'].touched && ff['jobEng'].invalid && ff['jobEng'].errors && ff['jobEng'].errors['required']"
+                class="error">
+                Field Name is required.</div>
+            </div>
+            
+        
+            <div class="col-12 text-end mt-5">
+                <p>status: {{titleForm.status}}</p>
+                <button type="button" class="btn btn btn-outline-secondary me-2">cancel</button>
+                <button type="submit" class="btn btn-outline-primary" [disabled]="!titleForm.valid">Submit<i
+                    *ngIf="isDataUploading" class="fa fa-spinner fa-pulse fa-fw"></i></button>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">OK</button>
+    </div>
+    <p>{{update_message}}</p>
+  </ng-template>
+  
+   <!--Delete Job road confirm-->
+<ng-template #delete let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-delete">Delete Job title for {{selected_title.jobEng}}</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <p>This will permanently remove the data from database. Continue?</p>
+    </div>
+    <div class="modal-footer">
+
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">OK</button>
+    </div>
+  </ng-template>
+  
